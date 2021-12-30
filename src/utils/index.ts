@@ -7,53 +7,56 @@ import { useEffect, useState } from "react";
  * @param val
  * @returns
  */
- export const isFalsy = (val: unknown) => (val === 0 ? false : !val);
- /**
-  * 清楚掉对象中值为空的项
-  * @param obj
-  * @returns
-  */
- export const cleanObject = (obj: object) => {
-   const result = { ...obj };
-   Object.keys(obj).forEach(key => {
-     // @ts-ignore
-     const value = obj[key];
-     if (isFalsy(value)) {
-       // @ts-ignore
-       delete result[key];
-     }
-   });
-   return result;
- };
+export const isFalsy = (val: unknown) => (val === 0 ? false : !val);
 
- export const useMount = (callback: () => void) => {
-   useEffect(() => {
-     callback();
-   }, [])
- }
+export const isVoid = (val: unknown) => val === undefined || val === null || val === ''
+/**
+ * 清楚掉对象中值为空的项
+ * @param obj
+ * @returns
+ */
 
- export const useDebounce = <V>(value: V, delay?: number) => {
-   const [debouncedValue, setDebouncedValue] = useState(value)
+export const cleanObject = (obj: { [key: string]: unknown }) => {
+  const result = { ...obj };
+  Object.keys(obj).forEach(key => {
+    const value = obj[key];
+    if (isVoid(value)) {
+      delete result[key];
+    }
+  });
+  return result;
+};
 
-   useEffect(() => {
-     const timeout = setTimeout(() => setDebouncedValue(value), delay)
-     return () => clearTimeout(timeout)
-   }, [value, delay])
+export const useMount = (callback: () => void) => {
+  useEffect(() => {
+    callback();
+    // 依赖项里面加上callback会造成无限循环，这个和useCallback和useMemo有关系
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+}
 
-   return debouncedValue
- }
+export const useDebounce = <V>(value: V, delay?: number) => {
+  const [debouncedValue, setDebouncedValue] = useState(value)
 
- export const useArray = <T>(initialArray: T[]) => {
-   const [value, setValue] = useState(initialArray)
-   return {
-     value,
-     setValue,
-     add: (item: T) => setValue([...value, item]),
-     clear: () => setValue([]),
-     removeIndex: (index: number) => {
-       const copy = [...value]
-       copy.splice(index, 1)
-       setValue(copy)
-     }
-   }
- }
+  useEffect(() => {
+    const timeout = setTimeout(() => setDebouncedValue(value), delay)
+    return () => clearTimeout(timeout)
+  }, [value, delay])
+
+  return debouncedValue
+}
+
+export const useArray = <T>(initialArray: T[]) => {
+  const [value, setValue] = useState(initialArray)
+  return {
+    value,
+    setValue,
+    add: (item: T) => setValue([...value, item]),
+    clear: () => setValue([]),
+    removeIndex: (index: number) => {
+      const copy = [...value]
+      copy.splice(index, 1)
+      setValue(copy)
+    }
+  }
+}
