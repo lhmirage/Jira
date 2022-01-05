@@ -1,6 +1,8 @@
 import { Table, TableProps } from 'antd';
 import dayjs from 'dayjs';
 import React from 'react';
+// react-router 和 react-router-dom 的关系，类似于react和react-dom/react-native
+import { Link } from 'react-router-dom';
 import { User } from './search-panel';
 
 
@@ -21,8 +23,10 @@ export const List = ({ users, ...props }: ListProps) => {
   return <Table pagination={false} rowKey={item => item.id} columns={[
     {
       title: '名称',
-      dataIndex: 'name',
-      sorter: (a, b) => a.name.localeCompare(b.name)
+      sorter: (a, b) => a.name.localeCompare(b.name),
+      render(value, project) {
+        return <Link to={String(project.id)}>{project.name}</Link>
+      }
     },
     {
       title: '部门',

@@ -4,11 +4,14 @@ import { LoginScreen } from "./login"
 import { RegisterScreen } from "./register"
 import styled from "@emotion/styled"
 import logo from 'assets/newbg1.png'
+import { useDocumentTitle } from "utils"
 
 
 export const UnauthenticatedApp = () => {
   const [isRegister, setIsRegister] = useState(false)
   const [error, setError] = useState<Error | null>(null)
+
+  useDocumentTitle('请登录注册以继续')
   return <Container>
     <Background/>
     <ShadowCard>

@@ -1,6 +1,6 @@
 /* 常用数据操作 */
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /**
  * 判断是否是假值
@@ -60,3 +60,24 @@ export const useArray = <T>(initialArray: T[]) => {
     }
   }
 }
+
+export const useDocumentTitle = (title: string, keepOnUnmount: boolean = true) => {
+  const oldTitle = useRef(document.title).current
+  // 页面加载时：旧title'React App'
+  // 加载后：新title
+
+  useEffect(() => {
+    document.title = title
+  }, [title])
+
+  useEffect(() => {
+    return () => {
+      if (!keepOnUnmount) {
+        // 如果不指定依赖，读到的就是旧title
+        document.title = oldTitle
+      }
+    }
+  }, [keepOnUnmount, oldTitle])
+}
+
+export const resetRoute = () => window.location.href = window.location.origin
