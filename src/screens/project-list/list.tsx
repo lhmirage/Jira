@@ -1,4 +1,4 @@
-import { Table, TableProps } from 'antd';
+import { Dropdown, Menu, Table, TableProps } from 'antd';
 import dayjs from 'dayjs';
 import React from 'react';
 // react-router 和 react-router-dom 的关系，类似于react和react-dom/react-native
@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { User } from './search-panel';
 import { Pin } from 'components/pin'
 import { useEditProject } from 'utils/project';
+import { ButtonNoPadding } from 'components/lib';
 
 
 export interface Project {
@@ -19,7 +20,8 @@ export interface Project {
 
 interface ListProps extends TableProps<any> {
   users: User[];
-  refresh?: () => void
+  refresh?: () => void;
+  projectButton: JSX.Element
 }
 
 export const List = ({ users, ...props }: ListProps) => {
@@ -57,6 +59,17 @@ export const List = ({ users, ...props }: ListProps) => {
         return <span>
           {project.created ? dayjs(project.created).format('YYYY-MM-DD') : '无'}
         </span>
+      }
+    },
+    {
+      render(value, project) {
+        return <Dropdown overlay={<Menu>
+          <Menu.Item key={'edit'}>
+            {props.projectButton}
+          </Menu.Item>
+        </Menu>}>
+          <ButtonNoPadding type={"link"}>...</ButtonNoPadding>
+        </Dropdown>
       }
     }
   ]}
