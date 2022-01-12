@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react"
+import { useState, useCallback, useReducer } from "react"
 import { useMountedRef } from "utils"
 
 interface State<D> {
@@ -17,30 +17,37 @@ const defaultConfig = {
   throwOnError: false
 }
 
+const useSafeDispatch = <T>(dispatch: (...args: T[]) => void) => {
+  const mountedRef = useMountedRef()
+
+  return useCallback((...args: T[]) => (mountedRef.current ? dispatch(...args) : void 0), [dispatch, mountedRef])
+
+}
+
 export const useAsync = <D>(initialState?: State<D>, initialConfig?: typeof defaultConfig) => {
   const config = { ...defaultConfig, ...initialConfig }
-  const [state, setState] = useState<State<D>>({
+  const [state, dispatch] = useReducer((state: State<D>, action: Partial<State<D>>) => ({ ...state, ...action }), {
     ...defaultInitialState,
     ...initialState
   })
 
-  const mountedRef = useMountedRef()
+  const safeDispatch =  useSafeDispatch(dispatch)
   // useState直接传入函数的含义是：惰性初始化：所以，要用useState保存函数，不能直接传入函数
   // 使用useref的时候，因为改变的不是组件的状态，所以重新赋值current不会导致组件的更新，可以自己强制读取
 
   const [retry, setRetry] = useState(() => () => { })
 
-  const setData = useCallback((data: D) => setState({
+  const setData = useCallback((data: D) => safeDispatch({
     data,
     stat: 'success',
     error: null
-  }), [])
+  }), [safeDispatch])
 
-  const setError = useCallback((error: Error) => setState({
+  const setError = useCallback((error: Error) => safeDispatch({
     error,
     stat: 'error',
     data: null
-  }), [])
+  }), [safeDispatch])
 
   // 用来触发异步请求
   const run = useCallback(
@@ -53,10 +60,9 @@ export const useAsync = <D>(initialState?: State<D>, initialConfig?: typeof defa
           run(runConfig?.retry(), runConfig)
         }
       })
-      setState(prevState => ({ ...prevState, stat: 'loading' }))
+      safeDispatch({ stat: 'loading' })
       return promise.then(data => {
-        if (mountedRef.current)
-          setData(data);
+        setData(data);
         return data
       }).catch(error => {
         // catch会消化异常，如果不主动抛出，外面是接收不到的
@@ -67,7 +73,7 @@ export const useAsync = <D>(initialState?: State<D>, initialConfig?: typeof defa
         return error
       })
     },
-    [config.throwOnError, mountedRef, setData, setError])
+    [config.throwOnError, setData, setError, safeDispatch])
 
   return {
     isIdle: state.stat === 'idle',

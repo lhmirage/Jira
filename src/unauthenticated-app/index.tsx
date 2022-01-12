@@ -41,7 +41,8 @@ const Background = styled.div`
   position: absolute;
   width: 100%;
   height: 100%;
-  background-image: url(${logo})
+  background-image: url(${logo});
+  background-repeat: no-repeat;
 `
 
 /* const Header = styled.header`
