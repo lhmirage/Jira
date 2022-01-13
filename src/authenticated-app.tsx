@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { useAuth } from 'context/auth-context'
-import React, { useState } from 'react'
+import React from 'react'
 import { ProjectListScreen } from "./screens/project-list"
 import { ButtonNoPadding, Row } from "components/lib"
 import { Button, Dropdown, Menu } from 'antd'
@@ -16,30 +16,29 @@ import { ProjectPopover } from "components/project-popover"
 // grid从布局出发：先规划网格（数量一般比较固定），然后再把元素往里面填充
 
 export const AuthenticatedApp = () => {
-  const [projectModalOpen, setProjectModalOpen] = useState(false)
 
   return <Container>
-    <PageHeader projectButton={<ButtonNoPadding onClick={() => setProjectModalOpen(true)} type={"link"}>创建项目</ButtonNoPadding>} />
-    <Main>
-      <Router>
+    <Router>
+      <PageHeader />
+      <Main>
         <Routes>
           <Route path={'*'} element={<Navigate to={'/projects'} />}></Route>
-          <Route path={'/projects'} element={<ProjectListScreen projectButton={<ButtonNoPadding onClick={() => setProjectModalOpen(true)} type={"link"}>创建项目</ButtonNoPadding>} />}></Route>
+          <Route path={'/projects'} element={<ProjectListScreen />}></Route>
           <Route path={'/projects/:projectId/*'} element={<ProjectScreen />}></Route>
         </Routes>
-      </Router>
-    </Main>
-    <ProjectModal projectModalOpen={projectModalOpen} onClose={() => setProjectModalOpen(false)}></ProjectModal>
+      </Main>
+      <ProjectModal />
+    </Router>
   </Container>
 }
 
-const PageHeader = (props: { projectButton: JSX.Element }) => {
+const PageHeader = () => {
   return <Header between={true}>
     <HeaderLeft gap={true}>
       <ButtonNoPadding type={'link'} onClick={resetRoute}>
         <h2>Logo</h2>
       </ButtonNoPadding>
-      <ProjectPopover {...props} />
+      <ProjectPopover />
       <span>用户</span>
     </HeaderLeft>
     <HeaderRight>
