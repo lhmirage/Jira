@@ -1,4 +1,4 @@
-import { Project } from "../screens/project-list/list"
+import { Project } from "../types/Project";
 import { useHttp } from './http'
 import { QueryKey, useMutation, useQuery } from "react-query";
 import { useAddConfig, useEditConfig, useDeleteConfig } from 'utils/use-optimistic-options'

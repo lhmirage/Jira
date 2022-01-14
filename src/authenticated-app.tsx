@@ -72,5 +72,10 @@ const Header = styled(Row)`
 `;
 const HeaderLeft = styled(Row)``;
 const HeaderRight = styled.div``;
-const Main = styled.main``
 
+
+// 遗留问题，会导致页面不均衡
+const Main = styled.main`
+  display: flex;
+  overflow: hidden;
+`

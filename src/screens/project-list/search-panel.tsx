@@ -2,18 +2,10 @@
 // 行内css
 import { Form, Input } from 'antd';
 import React from 'react';
-import { Project } from './list';
+import { Project } from "../../types/Project";
 import { UserSelect } from 'components/user-select'
+import { User } from '../../types/User';
 
-
-export interface User {
-  id: number;
-  name: string;
-  email: string;
-  title: string;
-  organization: string;
-  token: string
-}
 
 interface SearchPanelProps {
   users: User[],

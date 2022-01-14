@@ -3,22 +3,14 @@ import dayjs from 'dayjs';
 import React from 'react';
 // react-router 和 react-router-dom 的关系，类似于react和react-dom/react-native
 import { Link } from 'react-router-dom';
-import { User } from './search-panel';
+import { User } from "../../types/User";
 import { Pin } from 'components/pin'
 import { useDeleteProject, useEditProject } from 'utils/project';
 import { ButtonNoPadding } from 'components/lib';
 import { useProjectModal, useProjectsQueryKey } from './util';
 import confirm from 'antd/lib/modal/confirm';
+import { Project } from '../../types/Project';
 
-
-export interface Project {
-  id: number;
-  name: string;
-  personId: number;
-  pin: boolean;
-  organization: string;
-  created: number
-}
 
 interface ListProps extends TableProps<any> {
   users: User[];
