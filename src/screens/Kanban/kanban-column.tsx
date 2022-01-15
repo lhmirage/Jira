@@ -6,6 +6,8 @@ import { useTaskTypes } from "utils/task-type"
 import styled from "@emotion/styled";
 import { Card } from "antd";
 import { CreateTask } from "screens/Kanban/create-task"
+import taskIcon from "assets/task.svg"
+import bugIcon from "assets/bug.svg"
 
 const TaskTypeIcon = ({ id }: { id: number }) => {
   const { data: taskTypes } = useTaskTypes()
@@ -13,8 +15,7 @@ const TaskTypeIcon = ({ id }: { id: number }) => {
   if (!name) {
     return null
   }
-  ////////////////////////////
-  return <span>1</span>
+  return <img src={name === "task" ? taskIcon : bugIcon} alt=""/>
 }
 
 export const KanbanColumn = ({ kanban }: { kanban: Kanban }) => {

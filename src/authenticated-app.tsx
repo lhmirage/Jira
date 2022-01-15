@@ -10,6 +10,7 @@ import { ProjectScreen } from "./screens/project"
 import { resetRoute } from 'utils'
 import { ProjectModal } from 'screens/project-list/project-modal'
 import { ProjectPopover } from "components/project-popover"
+import { ReactComponent as SoftwareLogo } from "assets/software-logo.svg"
 
 // 一般来说，一维布局用flex，二维布局用grid
 // flex从内容出发：先有内容（数量不固定），均匀分布容器中，由内容自己的大小决定占据的空间
@@ -36,7 +37,7 @@ const PageHeader = () => {
   return <Header between={true}>
     <HeaderLeft gap={true}>
       <ButtonNoPadding type={'link'} onClick={resetRoute}>
-        <h2>Logo</h2>
+        <SoftwareLogo width={'18rem'} color={'rgb(38, 132, 255)'} />
       </ButtonNoPadding>
       <ProjectPopover />
       <span>用户</span>
