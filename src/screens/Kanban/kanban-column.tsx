@@ -13,14 +13,21 @@ import { Mark } from "components/mark"
 import { useDeleteKanban } from "utils/kanban";
 import { Row } from "components/lib";
 import { Drop, DropChild, Drag } from "components/drag-and-drop"
+import { useUsers } from "utils/user";
 
-const TaskTypeIcon = ({ id }: { id: number }) => {
+const TaskTypeIcon = ({ id, taskid }: { id: number, taskid: number }) => {
   const { data: taskTypes } = useTaskTypes()
   const name = taskTypes?.find(taskType => taskType.id === id)?.name
+  const { data: users } = useUsers()
   if (!name) {
     return null
   }
-  return <img src={name === "task" ? taskIcon : bugIcon} alt="" />
+  return (
+    <Row between={true}>
+      <img src={name === "task" ? taskIcon : bugIcon} alt="" />
+      <span>{users?.find(user => user.id === taskid)?.name}</span>
+    </Row>
+  )
 }
 
 const TaskCard = ({ task }: { task: Task }) => {
@@ -30,7 +37,7 @@ const TaskCard = ({ task }: { task: Task }) => {
     <p>
       <Mark keyword={keyword} name={task.name} />
     </p>
-    <TaskTypeIcon id={task.typeId} />
+    <TaskTypeIcon id={task.typeId} taskid={task.processorId} />
   </Card>
 }
 
@@ -45,7 +52,7 @@ export const KanbanColumn = React.forwardRef<HTMLDivElement, { kanban: Kanban }>
     </Row>
     <TasksContainer>
       <Drop type={'ROW'} direction={'vertical'} droppableId={String(kanban.id)}>
-        <DropChild style={{minHeight: '5px'}}>
+        <DropChild style={{ minHeight: '5px' }}>
           {tasks?.map((task, taskIndex) => (
             <Drag key={task.id} index={taskIndex} draggableId={'task' + task.id}>
               <div>

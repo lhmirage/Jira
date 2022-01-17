@@ -1,6 +1,6 @@
+import React from 'react';
 import { List } from './list';
 import { SearchPanel } from './search-panel';
-import React from 'react';
 import { useDebounce, useDocumentTitle } from 'utils';
 import { useProjects } from 'utils/project'
 import { useUsers } from 'utils/user'
@@ -34,4 +34,5 @@ export const ProjectListScreen = () => {
 
 const Container = styled.div`
   padding: 3.2rem;
+  width: 100%;
 `
